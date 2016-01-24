@@ -7,6 +7,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
+import android.content.Intent;
+import java.util.Locale;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +26,7 @@ import com.clarifai.api.exception.ClarifaiException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 import static android.provider.MediaStore.Images.Media;
 
@@ -28,8 +34,10 @@ import static android.provider.MediaStore.Images.Media;
 /**
  * A simple Activity that performs recognition using the Clarifai API.
  */
-public class CameraIntentActivity extends Activity {
+public class CameraIntentActivity extends Activity implements OnInitListener {
     private static final String TAG = CameraIntentActivity.class.getSimpleName();
+    private TextToSpeech engine;
+    private int DATA_CHECKING = 0;
 
     // IMPORTANT NOTE: you should replace these keys with your own App ID and secret.
     // These can be obtained at https://developer.clarifai.com/applications
@@ -56,6 +64,13 @@ public class CameraIntentActivity extends Activity {
                 startActivityForResult(intent, CODE_PICK);
             }
         });
+
+        //create an Intent
+        Intent checkData = new Intent();
+        //set it up to check for tts data
+        checkData.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        //start it so that it returns the result
+        startActivityForResult(checkData, DATA_CHECKING);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -82,6 +97,20 @@ public class CameraIntentActivity extends Activity {
                 textView.setText("Unable to load selected image.");
             }
         }
+
+        //do they have the data
+        if (requestCode == DATA_CHECKING) {
+            //yep - go ahead and instantiate
+            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS)
+                engine = new TextToSpeech(this, this);
+                //no data, prompt to install it
+            else {
+                Intent promptInstall = new Intent();
+                promptInstall.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(promptInstall);
+            }
+        }
+
     }
 
     /** Loads a Bitmap from a content URI returned by the media picker. */
@@ -138,6 +167,7 @@ public class CameraIntentActivity extends Activity {
                     b.append(b.length() > 0 ? ", " : "").append(tag.getName());
                 }
                 textView.setText("Tags:\n" + b);
+                speech("Tags:\n" + b);
             } else {
                 Log.e(TAG, "Clarifai: " + result.getStatusMessage());
                 textView.setText("Sorry, there was an error recognizing your image.");
@@ -146,5 +176,27 @@ public class CameraIntentActivity extends Activity {
             textView.setText("Sorry, there was an error recognizing your image.");
         }
         selectButton.setEnabled(true);
+    }
+
+    private void speech(String text) {
+//        String myWords = "I hope this works";
+        engine.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    @Override
+    public void onDestroy() {
+        // Don't forget to shutdown tts!
+        if (engine != null) {
+            engine.stop();
+            engine.shutdown();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            engine.setLanguage(getResources().getConfiguration().locale);
+        }
     }
 }
