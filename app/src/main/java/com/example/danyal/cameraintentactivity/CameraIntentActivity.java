@@ -40,6 +40,7 @@ public class CameraIntentActivity extends AppCompatActivity {
         mPhotoCapturedImageView = (ImageView) findViewById(R.id.capturePhotoImageView);
     }
 
+    // Commit test
     public void takePicture(View view) {
      //   Toast.makeText(this, "camera button pressed", Toast.LENGTH_SHORT).show();
         Intent callCameraApplicationIntent = new Intent();
