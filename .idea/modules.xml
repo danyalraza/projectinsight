@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CameraIntentActivity.iml" filepath="$PROJECT_DIR$/CameraIntentActivity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ProjectInsight.iml" filepath="$PROJECT_DIR$/ProjectInsight.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

@@ -22,6 +22,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.clarifai.api.ClarifaiClient;
+import com.clarifai.api.RecognitionRequest;
+import com.clarifai.api.RecognitionResult;
+import com.clarifai.api.Tag;
 
 public class CameraIntentActivity extends AppCompatActivity {
     private static final int ACTIVITY_START_CAMERA_APP = 5;
@@ -53,13 +57,14 @@ public class CameraIntentActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
-            //Toast.makeText(this, "Picture taken successfully", Toast.LENGTH_SHORT).show();
-//            Bundle extras = data.getExtras();
-//            Bitmap photoCapturedBitmap = (Bitmap) extras.get("data");
-//            mPhotoCapturedImageView.setImageBitmap(photoCapturedBitmap);
-//            Bitmap photoCapturedBitmap = BitmapFactory.decodeFile(mImageFileLocation);
-//            mPhotoCapturedImageView.setImageBitmap(photoCapturedBitmap);
-            setReducedImageSize();
+//            ClarifaiClient clarifai = new ClarifaiClient("KUcty1hKE6k6uXtYhaiSHmKIR4ZuMwqaHsFgsWw4", "nHeFdnfr5hZXM-R4MytzRZqXf1Of_ZzMdRmSZIRB");
+//            List<RecognitionResult> results =
+//                    clarifai.recognize(new RecognitionRequest(new File(mImageFileLocation)));
+//
+//            for (Tag tag : results.get(0).getTags()) {
+//                System.out.println(tag.getName() + ": " + tag.getProbability());
+//            }
+            
         }
     }
 
